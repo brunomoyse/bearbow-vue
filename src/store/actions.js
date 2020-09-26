@@ -24,7 +24,7 @@ const actions = {
         }
     },
     setToken ({ commit }, data) {
-        return axios.post('user/login', data)
+        return axios.post('users/login', data)
             .then(response => {
                 if (response.status !== 200) {
                     alert('Impossible de s\'authentifier')
@@ -45,7 +45,7 @@ const actions = {
       return axios.get('products')
             .then(response => {
                 commit('SET_PRODUCTS', response.data)
-                const socket = openSocket('http://192.168.0.18:3030/')
+                const socket = openSocket('localhost:3030/')
                 socket.on('products', data => {
                     switch (data.action) {
                         case 'create':
@@ -60,6 +60,7 @@ const actions = {
                 })
             })
     },
+
     addProduct ({ commit }, data) {
         const fd = new FormData()
 
@@ -81,6 +82,7 @@ const actions = {
         return axios.post('products', fd)
             .catch((err) => console.log(err))
     },
+
     editProduct ({ commit }, data) {
         const fd = new FormData()
         const id = data._id
@@ -105,6 +107,7 @@ const actions = {
             })
             .catch((err) => console.log('erreur action editProduct: ' + err))
     },
+
     delProduct ({ commit }, id) {
         return axios.delete(`products/${id}`)
             .then(response => {
@@ -117,6 +120,7 @@ const actions = {
                 throw (err)
             })
     }
+
   }
 
   export default actions

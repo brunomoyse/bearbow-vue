@@ -112,7 +112,7 @@
                             <v-col cols="6" v-if="(typeof produit.image) == 'string'" class="align-center">
                                 <v-card height="300px" class="pa-2">
                                     <v-img
-                                        :src="'http://192.168.0.18:3000/'+ produit.image"
+                                        :src="'localhost:3000/'+ produit.image"
                                         contain
                                         height="250px" />
                                     <v-card-actions>

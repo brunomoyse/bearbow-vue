@@ -21,7 +21,8 @@
                                 label="Mot de passe"
                                 required
                                 type="password"
-                                v-model="user.password"></v-text-field>
+                                v-model="user.password"
+                                @keydown.enter="login()"></v-text-field>
                             </v-col>
 
                         </v-row>
