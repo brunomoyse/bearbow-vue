@@ -38,6 +38,11 @@ const mutations = {
         const products = state.products.all
         const index = products.findIndex(product => product._id === id)
         products.splice(index, 1)
+    },
+
+    /* --- ORDERS --- */
+    SET_ORDERS (state, data) {
+        state.orders = data
     }
   }
   export default mutations

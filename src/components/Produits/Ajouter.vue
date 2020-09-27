@@ -116,9 +116,10 @@
                             <v-file-input
                                 :rules="rules"
                                 accept="image/png, image/jpeg"
-                                placeholder="Choisir une photo"
+                                placeholder="Choisir photo(s)"
                                 prepend-icon="mdi-camera"
                                 dense
+                                multiple
                                 v-model="produit.image"
                                 @change="onFileSelected"
                             ></v-file-input>

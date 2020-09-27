@@ -106,35 +106,37 @@
                             ></v-checkbox>
                         </v-col>
 
-                        <!-- Images -->
-                        <v-row>
-                            <!-- Image db -->
-                            <v-col cols="6" v-if="(typeof produit.image) == 'string'" class="align-center">
+                        <!-- Images existantes-->
+                        <v-row v-if="Array.isArray(produit.image) && typeof produit.image[0] === 'string'">
+                            <v-col cols="6" class="align-center" v-for="image in produit.image" :key="image.path">
                                 <v-card height="300px" class="pa-2">
                                     <v-img
-                                        :src="'localhost:3000/'+ produit.image"
+                                        :src="`http://localhost:3000/` + image"
                                         contain
                                         height="250px" />
-                                    <v-card-actions>
-                                        <v-spacer></v-spacer>
-                                        <v-btn icon @click="resetProductImage">
-                                            <v-icon>mdi-delete</v-icon>
-                                        </v-btn>
-                                        <v-spacer></v-spacer>
-                                    </v-card-actions>
                                 </v-card>
                             </v-col>
+                            <v-col cols="12" class="align-center">
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn icon @click="resetProductImage">
+                                        <v-icon>mdi-delete</v-icon>
+                                    </v-btn>
+                                    <v-spacer></v-spacer>
+                                </v-card-actions>
+                            </v-col>
+                        </v-row>
+                        <v-row v-else>
                             <!-- Image upload -->
-                            <v-col cols="6" v-else>
-                                <v-card style="padding: 120px 30px 125px 25px;">
-                                            <v-file-input
-                                                accept="image/png, image/jpeg"
-                                                placeholder="Choisir une photo"
-                                                prepend-icon="mdi-camera"
-                                                dense
-                                                @change="onFileSelected"
-                                            ></v-file-input>
-                                </v-card>
+                            <v-col cols="12">
+                                <v-file-input
+                                    accept="image/png, image/jpeg"
+                                    placeholder="Choisir photo(s)"
+                                    prepend-icon="mdi-camera"
+                                    dense
+                                    multiple
+                                    v-model="produit.image"
+                                ></v-file-input>
                             </v-col>
                         </v-row>
 
@@ -158,16 +160,7 @@ export default {
     data () {
         return {
             dialog: false,
-            // produit: {
-            //     categorie: null,
-            //     description: null,
-            //     disponibilite: false,
-            //     image: null,
-            //     marque: null,
-            //     nom: null,
-            //     prix: null,
-            //     type: null
-            // },
+            rules: [],
             form: {
                 type: ['Arcs', 'Accessoires'],
                 categorie: {
@@ -199,9 +192,6 @@ export default {
           }
 
           this.editProduct(productData)
-      },
-      onFileSelected (file) {
-          this.produit.image = file
       },
       resetProductImage () {
           this.produit.image = null

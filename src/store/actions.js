@@ -62,43 +62,62 @@ const actions = {
     },
 
     addProduct ({ commit }, data) {
-        const fd = new FormData()
+        var fdAddProduct = new FormData()
 
-        fd.append('categorie', data.categorie)
+        fdAddProduct.append('nom', data.nom)
+        fdAddProduct.append('type', data.type)
+        fdAddProduct.append('categorie', data.categorie)
+        fdAddProduct.append('marque', data.marque)
         if (data.description) {
-            fd.append('description', data.description)
+            fdAddProduct.append('description', data.description)
         }
-        fd.append('disponibilite', data.disponibilite)
-        if (data.image) {
-            fd.append('image', data.image, data.image.name)
-        }
-        fd.append('marque', data.marque)
-        fd.append('nom', data.nom)
         if (data.prix) {
-            fd.append('prix', Number(data.prix).toFixed(2))
+            fdAddProduct.append('prix', Number(data.prix).toFixed(2))
         }
-        fd.append('type', data.type)
+        data.disponibilite ? fdAddProduct.append('disponibilite', true) : fdAddProduct.append('disponibilite', false)
+        if (data.image) {
+            data.image.forEach(file => {
+                fdAddProduct.append('image', file, file.name)
+            })
+        }
 
-        return axios.post('products', fd)
+        return axios.post('products', fdAddProduct)
             .catch((err) => console.log(err))
     },
 
     editProduct ({ commit }, data) {
-        const fd = new FormData()
         const id = data._id
 
-        fd.append('_id', id)
-        fd.append('categorie', data.categorie)
-        fd.append('description', data.description)
-        fd.append('disponibilite', false)
-        // fd.append('image', data.image, data.image.name)
-        fd.append('image', null)
-        fd.append('marque', data.marque)
-        fd.append('nom', data.nom)
-        fd.append('prix', Number(data.prix).toFixed(2))
-        fd.append('type', data.type)
+        var fdUpdate = new FormData()
 
-        return axios.patch(`products/${id}`, fd)
+        if (data.image !== null) {
+            const typeImage = typeof Object.entries(data.image)[0][1]
+
+            if (typeImage === 'string') {
+                fdUpdate.append('image', data.image)
+            } else if (typeImage === 'object') {
+                data.image.forEach(file => {
+                    data.image.forEach(file => {
+                        fdUpdate.append('image', file, file.name)
+                    })
+                })
+            }
+        }
+
+        fdUpdate.append('_id', data._id)
+        fdUpdate.append('nom', data.nom)
+        fdUpdate.append('type', data.type)
+        fdUpdate.append('categorie', data.categorie)
+        fdUpdate.append('marque', data.marque)
+        if (data.description) {
+            fdUpdate.append('description', data.description)
+        }
+        if (data.prix) {
+            fdUpdate.append('prix', Number(data.prix).toFixed(2))
+        }
+        data.disponibilite ? fdUpdate.append('disponibilite', true) : fdUpdate.append('disponibilite', false)
+
+        return axios.patch(`products/${id}`, fdUpdate)
             .then(response => {
               if (response.status === 200) {
                 console.log(response.data.message)
@@ -118,6 +137,27 @@ const actions = {
             })
             .catch((err) => {
                 throw (err)
+            })
+    },
+
+    /* --- Orders --- */
+    setOrders ({ commit }) {
+        return axios.get('orders')
+            .then(response => {
+                commit('SET_ORDERS', response.data)
+                const socket = openSocket('localhost:3030/')
+                socket.on('orders', data => {
+                    switch (data.action) {
+                        case 'create':
+                            commit('ADD_ORDER', data.order)
+                            break
+                        case 'update':
+                            commit('EDIT_ORDER', data.order)
+                            break
+                        case 'delete':
+                            commit('DEL_ORDER', data.id)
+                    }
+                })
             })
     }
 

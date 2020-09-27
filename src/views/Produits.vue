@@ -45,9 +45,20 @@
 
         <!-- Formater le prix à deux décimales -->
         <template v-slot:[`item.prix`]="{ item }">
-           {{ new Intl.NumberFormat('fr-BE', { style: 'currency', currency: 'EUR' }).format(item.prix) }}
-           <!-- {{ Number(item.prix).toFixed(2) }} -->
-         </template>
+            <div v-if="typeof item.prix === 'number'">
+                {{ new Intl.NumberFormat('fr-BE', { style: 'currency', currency: 'EUR' }).format(Number(item.prix)) }}
+            </div>
+        </template>
+
+        <!-- Dispo -->
+        <template v-slot:[`item.disponibilite`]="{ item }">
+           <div v-if="item.disponibilite === true">
+               V
+           </div>
+           <div v-else-if="item.disponibilite === false">
+               X
+           </div>
+        </template>
 
         <!-- Actions éditer/supprimer-->
         <template v-slot:[`item.actions`]="{ item }">
@@ -104,7 +115,7 @@ export default {
             { text: 'Categorie', value: 'categorie' },
             { text: 'Marque', value: 'marque' },
             { text: 'Prix (€)', align: 'end', value: 'prix' },
-            { text: 'Disponibilité', value: 'disponibilite' },
+            { text: 'Disponibilité', align: 'center', value: 'disponibilite' },
             { text: 'Actions', value: 'actions', sortable: false }
         ],
         search: '',

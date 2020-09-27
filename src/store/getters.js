@@ -11,6 +11,11 @@ const getters = {
         return state.products.all
     },
 
+    /* --- PRODUCTS --- */
+    getOrders (state) {
+        return state.orders.all
+    },
+
     getAlert (state) {
         return state.alert
     }
