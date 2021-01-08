@@ -10,8 +10,8 @@ import axios from 'axios'
 import { Ripple } from 'vuetify/lib/directives'
 
 // Ajouter l'url de base pour les requêtes 'axios'
-// axios.defaults.baseURL = 'http://ec2-3-125-122-130.eu-central-1.compute.amazonaws.com:3000'
-axios.defaults.baseURL = 'http://localhost:3000/'
+// axios.defaults.baseURL = 'http://localhost:3000/'
+axios.defaults.baseURL = 'http://18.193.101.111:3030/'
 // axios.defaults.headers.get['Accept'] = 'application/json';
 // eslint-disable-next-line quote-props
 axios.defaults.headers.common = { 'Authorization': `Bearer ${store.state.token}` }
