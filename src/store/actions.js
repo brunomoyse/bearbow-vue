@@ -45,7 +45,7 @@ const actions = {
       return axios.get('products')
             .then(response => {
                 commit('SET_PRODUCTS', response.data)
-                const socket = openSocket('localhost:3030/')
+                const socket = openSocket('http://localhost:3030/')
                 socket.on('products', data => {
                     switch (data.action) {
                         case 'create':
@@ -145,7 +145,7 @@ const actions = {
         return axios.get('orders')
             .then(response => {
                 commit('SET_ORDERS', response.data)
-                const socket = openSocket('localhost:3030/')
+                const socket = openSocket('http://localhost:3030/')
                 socket.on('orders', data => {
                     switch (data.action) {
                         case 'create':
